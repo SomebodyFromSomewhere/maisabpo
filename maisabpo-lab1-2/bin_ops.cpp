@@ -48,14 +48,67 @@ namespace maisabpo
 		return (a >> s) | (a << (64 - s));
 	}
 
-	uint64_t bin_ops::mix64(const uint64_t& a, const uint64_t& pos)
+	bool bin_ops::checkSequence(const std::vector<uint64_t>& vector)
 	{
-		return 0;
+		std::vector<uint64_t> vec_copy;
+
+		for (uint64_t i = 0; i < vector.size(); i++)
+		{
+			if (vector[i] >= 64)
+				return false;
+		}
+
+		return true;
+	}
+
+	uint64_t bin_ops::mix10(const uint64_t& pos, const uint64_t& a)
+	{
+		std::string positions = std::to_string(pos);
+		if (positions.size() > 10) throw std::invalid_argument("Positions given more than can resolve.");
+		uint64_t result = 0;
+		uint64_t mask = 0;
+		uint64_t bits = positions.length() - 1;
+
+		for (int i = 0; i < positions.size(); i++)
+		{
+			mask = static_cast<uint64_t>(1) << i;
+			if ((a & mask) == 0)
+				continue;
+			
+			uint64_t pos = std::stoi(std::string(1, positions.at(positions.size() - 1 - i)));
+			uint64_t new_pos = bits - pos;
+
+			result |= static_cast<uint64_t>(1) << new_pos;
+		}
+
+		return result;
+	}
+
+	uint64_t bin_ops::mix64(const std::vector<uint64_t>& pos, const uint64_t& a)
+	{
+		std::vector<uint64_t> pos_copy = pos;
+		std::reverse(pos_copy.begin(), pos_copy.end());
+		if (pos_copy.size() > 64) throw std::invalid_argument("Positions given more than can resolve.");
+		if (!bin_ops::checkSequence(pos_copy))
+			throw std::invalid_argument("Positions given are contains positions out of bound.");
+		uint64_t result = 0;
+		uint64_t mask = 0;
+		uint64_t maxVecPos = pos_copy.size() - 1;
+		for (int i = 0; i < pos_copy.size(); i++)
+		{
+			mask = static_cast<uint64_t>(1) << i;
+			if ((a & mask) == 0)
+				continue;
+
+			uint64_t position = pos_copy[(maxVecPos - i)];
+			result |= static_cast<uint64_t>(1) << position;
+		}
+
+		return result;
 	}
 
 	void bin_ops::printResult(std::string title, uint64_t lop, uint64_t rop, std::string op, uint64_t result, uint64_t expected)
 	{
-		const int bitsPerNumber = 64;
 		const char fillChar = '#';
 		const std::string lineStart = "# ";
 		const std::string lineEnd = " #";
@@ -64,11 +117,14 @@ namespace maisabpo
 		const std::string opeartionString = " " + op + " ";
 		const std::string equalString = " = ";
 		const std::string example = std::to_string(lop) + opeartionString + std::to_string(rop) + equalString + std::to_string(result);
-		const std::string exampleInBinary = std::bitset<bitsPerNumber>(lop).to_string() + opeartionString + std::bitset<bitsPerNumber>(rop).to_string()
-			+ equalString + std::bitset<bitsPerNumber>(result).to_string();
+		const std::string exampleInBinary = std::bitset<BIN_BITS_PER_NUMBER>(lop).to_string() + opeartionString + std::bitset<BIN_BITS_PER_NUMBER>(rop).to_string()
+			+ equalString + std::bitset<BIN_BITS_PER_NUMBER>(result).to_string();
 
 
-		uint64_t lineLenght = 3 * bitsPerNumber + opeartionString.length() + equalString.length() + lineStart.length() + lineEnd.length();
+		uint64_t exampleLineLenght = opeartionString.length() + equalString.length() + example.length();
+		uint64_t exampleInBinaryLineLenght = opeartionString.length() + equalString.length() + exampleInBinary.length();
+		uint64_t resultLineLenght = lineStart.length() + resultMessage.length() + expectedMessage.length() + lineEnd.length() + 1; // 1 stands for space in midle
+		uint64_t lineLenght = std::max(std::max(exampleLineLenght, exampleInBinaryLineLenght), resultLineLenght);
 		uint64_t sidesOffset = static_cast<uint64_t>(std::ceil(lineLenght / 2.0));
 		uint64_t titleHalf = static_cast<uint64_t>(std::floor(title.length() / 2.0));
 		uint64_t exampleHalf = static_cast<uint64_t>(std::ceil(example.length() / 2.0));

@@ -2,6 +2,7 @@
 #include <limits>
 #include "bin_ops.h"
 
+
 using namespace maisabpo;
 
 int main(int argc, char* argv[])
@@ -40,7 +41,19 @@ int main(int argc, char* argv[])
 	b = 2;
 	result = bin_ops::ror64(a, b);
 	bin_ops::printResult("ROR", a, b, "ROR", result, -std::numeric_limits<int64_t>::min());
-	// Dont fucking know why it is interpreted as signed, it takes -(2^64) and just removes sign. why last bit is counted as sign bit in unsigned type?
+	// Even if my type is unsigned it interprets first bit as sign bit
+
+	a = 76543210;
+	b = 11;
+
+	result = bin_ops::mix10(a, b);
+	bin_ops::printResult("MIX10", a, b, "MIX10", result, 208);
+
+	std::vector<uint64_t> v = { 7, 6, 5, 4,3,2,1,0 };
+	b = 11;
+
+	result = bin_ops::mix64(v, b);
+	bin_ops::printResult("MIX64", 1707, b, "MIX64", result, 208); // 1707 Just a placeholder, doesn't do anything
 
 	return 0;
 }
