@@ -1,6 +1,6 @@
 #include <iostream>
 #include <limits>
-#include "bin_ops.h"
+#include "bin_ops.hpp"
 
 
 using namespace maisabpo;

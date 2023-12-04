@@ -1,4 +1,4 @@
-#include "binary_output.h"
+#include "binary_output.hpp"
 
 namespace maisabpo
 {

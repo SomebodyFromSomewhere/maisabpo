@@ -1,5 +1,5 @@
 #include <iostream>
-#include "binary_output.h"
+#include "binary_output.hpp"
 
 
 void printUsage(std::string programName)
