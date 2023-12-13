@@ -8,7 +8,7 @@ int main()
 {
     pnums::pnum::init();
     srand(time(NULL));
-    // auto tGlob = std::chrono::high_resolution_clock::now();
+    auto tGlob = std::chrono::high_resolution_clock::now();
     // for (size_t i = 1; i < 100000; i++)
     // {
     //     if (pnums::pnum::isPrimary(i))
@@ -67,9 +67,9 @@ int main()
     t2 = std::chrono::high_resolution_clock::now();
     ms_double = t2 - t1;
     std::cout << ms_double.count() << "ms\n";
-    // auto tGlob2 = std::chrono::high_resolution_clock::now();
-    // ms_double = tGlob2 - tGlob;
-    // std::cout << "Global time elapsed: " << ms_double.count() << "ms\n";
+    auto tGlob2 = std::chrono::high_resolution_clock::now();
+    ms_double = tGlob2 - tGlob;
+    std::cout << "Global time elapsed: " << ms_double.count() << "ms\n";
     // pnums::pnum::printEratosthenesSieve(9000);
 
     return 0;

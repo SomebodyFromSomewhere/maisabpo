@@ -41,6 +41,8 @@ void pnums::pnum::makeSOE(const uint64_t &n, const bool &isUpperBoundary)
 
 void pnums::pnum::printEratosthenesSieve(const uint64_t &n, const uint64_t &elementsPerLine)
 {
+    if (!initialized)
+        makeSOE(10);
     int64_t loopLimit = std::min(primaryNumbers.size(), n);
     std::cout << "Printing " << loopLimit << " prime numbers of " << primaryNumbers.size() << " in total." << std::endl;
     for (size_t i = 0; i < loopLimit; i++)
@@ -54,25 +56,30 @@ void pnums::pnum::printEratosthenesSieve(const uint64_t &n, const uint64_t &elem
 bool pnums::pnum::isPrimary(const uint64_t &n)
 {
     if (!initialized)
-        throw new std::runtime_error("pnum: Have to create explicitly class instance at least once.");
+        makeSOE(10);
     if (n < 2)
         return false;
 
-    int64_t pNumsIndex = std::max(static_cast<int64_t>(primaryNumbers.size() - 1), static_cast<int64_t>(0));
+    for (size_t i = 0; i < LOOP_MAX_ITER; i++)
+    {
+        if (primaryNumbers.back() < n)
+            makeSOE(primaryNumbers.size() + 9);
+        else
+            return std::binary_search(primaryNumbers.begin(), primaryNumbers.end(), n);
+    }
 
-    // Last less than target
-    if (primaryNumbers.at(pNumsIndex) < n)
-    {
-        // std::cout << "[DBG][ISP] failed to find cached value, updating cache." << std::endl;
-        makeSOE(pNumsIndex + 10);
-        return isPrimary(n);    // TODO: Replace recursive call, with loop.
-                                // NOTE: Recursion BAD! With big spans between previous number and target, too many recursion calls. 
-                                // Example: between 10 and 100000 could be 1065  
-    }
-    else
-    {
-        return std::binary_search(primaryNumbers.begin(), primaryNumbers.end(), n);
-    }
+    // if (primaryNumbers.back() < n)
+    // {
+    //     // std::cout << "[DBG][ISP] failed to find cached value, updating cache." << std::endl;
+    //     makeSOE(primaryNumbers.size() + 9);
+    //     return isPrimary(n); // TODO: Replace recursive call, with loop.
+    //                          // NOTE: Recursion BAD! With big spans between previous number and target, too many recursion calls.
+    //                          // Example: between 10 and 100000 could be 1065
+    // }
+    // else
+    // {
+    //     return std::binary_search(primaryNumbers.begin(), primaryNumbers.end(), n);
+    // }
 
     return false;
 }

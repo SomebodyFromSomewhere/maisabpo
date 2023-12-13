@@ -4,6 +4,7 @@
 
 namespace pnums
 {
+    #define LOOP_MAX_ITER 1000000
     class pnum
     {
     public:
