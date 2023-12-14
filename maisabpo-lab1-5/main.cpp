@@ -18,7 +18,7 @@ int main()
 
     bnum x = "9999999999999999999999999999999999999998";
     bnum y = "2";
-
+    std::cout << x << std::endl;
     // std::cout << "Sum: " << (x + y) << std::endl;
 
     return 0;
