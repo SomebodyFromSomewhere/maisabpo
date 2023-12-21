@@ -7,6 +7,7 @@
 #include <bitset>
 #include <vector>
 #include <algorithm>
+#include <cmath>
 
 namespace maisabpo {
 	constexpr uint64_t BIN_BITS_PER_NUMBER = 64;

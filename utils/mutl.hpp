@@ -1,9 +1,16 @@
 #pragma once
 
-#ifdef CONSOLE_UTILS_EXPORTS
-#define CONSOLE_UTILS_API __declspec(dllexport)
-#else
-#define CONSOLE_UTILS_API __declspec(dllimport)
+#if defined(_MSC_VER)
+    //  Microsoft 
+    #ifdef CONSOLE_UTILS_EXPORTS
+        #define CONSOLE_UTILS_API __declspec(dllexport)
+    #else
+        #define CONSOLE_UTILS_API __declspec(dllimport)
+    #endif
+#elif defined(__GNUC__)
+    //  GCC
+    #define CONSOLE_UTILS_API __attribute__((visibility("default")))
+    #define IMPORT
 #endif
 
 #include <string>

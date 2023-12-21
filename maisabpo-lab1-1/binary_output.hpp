@@ -7,6 +7,7 @@
 #include <iomanip>
 #include <memory>
 #include <vector>
+#include <cmath>
 
 namespace maisabpo {
 	class bout
