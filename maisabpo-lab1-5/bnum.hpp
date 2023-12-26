@@ -1,35 +1,70 @@
 #pragma once
-#include <iostream>
-#include <stdint.h>
-#include <limits>
-#include <string>
 #include <vector>
+#include <string>
+#include <ostream>
+#include <iomanip>
+#include <sstream>
 
 class bnum
 {
 public:
+    // класс-исключение, бросаемое при делении на ноль
+    class divide_by_zero : public std::exception
+    {
+    };
+
     bnum();
-    bnum(int64_t x);
-    bnum(int64_t& x);
-    bnum(std::string& x);
-    bnum(const char *x);
-    bnum(const bnum &src);
-    bnum(bnum &&src) noexcept;
-    ~bnum();
+    bnum(std::string);
+    bnum(signed char);
+    bnum(unsigned char);
+    bnum(signed short);
+    bnum(unsigned short);
+    bnum(signed int);
+    bnum(unsigned int);
+    bnum(signed long);
+    bnum(unsigned long);
+    bnum(signed long long);
+    bnum(unsigned long long);
 
-    // bnum &operator=(const bnum &src);
-    // bnum &operator=(bnum &&src) noexcept;
+    friend std::ostream &operator<<(std::ostream &, const bnum &);
+    operator std::string() const;
+    const bnum operator+() const;
+    const bnum operator-() const;
+    const bnum operator++();
+    const bnum operator++(int);
+    const bnum operator--();
+    const bnum operator--(int);
+    friend bool operator==(const bnum &, const bnum &);
+    friend bool operator<(const bnum &, const bnum &);
+    friend bool operator!=(const bnum &, const bnum &);
+    friend bool operator<=(const bnum &, const bnum &);
+    friend bool operator>(const bnum &, const bnum &);
+    friend bool operator>=(const bnum &, const bnum &);
+    friend const bnum operator+(bnum, const bnum &);
+    bnum &operator+=(const bnum &);
+    friend const bnum operator-(bnum, const bnum &);
+    bnum &operator-=(const bnum &);
+    friend const bnum operator*(const bnum &, const bnum &);
+    bnum &operator*=(const bnum &);
+    friend const bnum operator/(const bnum &, const bnum &);
+    bnum &operator/=(const bnum &);
+    friend const bnum operator%(const bnum &, const bnum &);
+    bnum &operator%=(const bnum &);
 
-    friend bnum operator+(const bnum &x, const bnum &y);
-    friend bnum operator-(const bnum &x, const bnum &y);
-    friend bnum operator*(const bnum &x, const bnum &y);
-    friend bnum operator/(const bnum &x, const bnum &y);
-    friend std::ostream &operator<<(std::ostream &strm, const bnum &x);
-    friend std::istream &operator>>(std::istream &strm, const bnum &x);
+    bool odd() const;
+    bool even() const;
+    const bnum pow(bnum) const;
 
 private:
-    bool sign = true; // plus
-    std::vector<int32_t> chunks = {}; // TODO: Check if array version will be faster
-    const uint32_t MODULO = 1000000000;
-    void _init(std::string &&x);
+    // основание системы счисления (1 000 000 000)
+    static const int BASE = 1000000000;
+
+    // внутреннее хранилище числа
+    std::vector<int> _digits;
+
+    // знак числа
+    bool _is_negative;
+
+    void _remove_leading_zeros();
+    void _shift_right();
 };
